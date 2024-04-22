@@ -1,5 +1,5 @@
 # Ego-motion Estimation From Wheel Speeds & Steering Angle
-[detailed design document link](https://github.com/UditBhaskar19/EGO_MOTION_ESTIMATION/blob/main/1_egomotion_wheel_speed/1_ego_motion_from_wheel_speed.pdf)
+[detailed design document link](./1_ego_motion_from_wheel_speed.pdf)
 
 
 ## Introduction
@@ -17,7 +17,7 @@ Here the ego-motion estimation is performed from the **wheel speeds** and **stee
 
 
 ### 1. Inputs Considered and Required Outputs  <a name="t1"></a>
-![](https://github.com/UditBhaskar19/EGO_MOTION_ESTIMATION/blob/main/1_egomotion_wheel_speed/readme_artifacts/12_inputs_outputs.PNG)
+![](./readme_artifacts/12_inputs_outputs.PNG)
 <br>
 
 [Back to TOC](#t0)
@@ -30,7 +30,7 @@ Here the ego-motion estimation is performed from the **wheel speeds** and **stee
    - **Valid Wheel Speed Selection by Gating** : Due to road conditions and other environmental effects some wheels might be prone to skidding and slipping. Hence a gating procedure is introduced here to ensure that the wheel speed signal that are most likely corrupted are ignored for further processing. 
    - **Vehicle Ego-motion estimation** : Compute ego-motion w.r.t the wheel base center. Here it is assumed that the lateral velocity component is 0 ( vy = 0 )
 <br><br>
-![](https://github.com/UditBhaskar19/EGO_MOTION_ESTIMATION/blob/main/1_egomotion_wheel_speed/readme_artifacts/1_architecture.PNG)
+![](./readme_artifacts/1_architecture.PNG)
 <br>
 
 [Back to TOC](#t0)
@@ -38,12 +38,12 @@ Here the ego-motion estimation is performed from the **wheel speeds** and **stee
 
 ### 3. Results , Plots and Some Observations regarding Plots ( NuScenes mini - scene 0916 )  <a name="t3"></a>
    - **Input Signal Plot** : It can be observed that the wheel speed signals are significantly more noisy than the steering signal. Hence in this project, the wheel speeds are treated as stochastic inputs which are assumed to be uncorrelated and normally distributed. The steering angle which is almost noiseless is treated as a control parameter. Under these considerations the problem of ego-motion estimation reduces to the linear least squares problem.
-![](https://github.com/UditBhaskar19/EGO_MOTION_ESTIMATION/blob/main/1_egomotion_wheel_speed/readme_artifacts/3_input_signals.PNG)
+![](./readme_artifacts/3_input_signals.PNG)
    - **Ego motion estimation output Plot** : The estimated yaw-rate seems to be more noisy than the estimated velocities. Optionally the estimations can be made smoother by Kalman Filtering.
-![](https://github.com/UditBhaskar19/EGO_MOTION_ESTIMATION/blob/main/1_egomotion_wheel_speed/readme_artifacts/4_estimated_outputs.PNG)
+![](./readme_artifacts/4_estimated_outputs.PNG)
    - **Comparing estimated velocities and the input wheel speeds** : The variation of the estimated vx w.r.t time is as expected. Since the ego-motion is estimated w.r.t the wheel base center, at each time the value would be somewhere in the middle of all the wheel speed values. Additionally it can be concluded that the estmated output appears to be less noisy than the input wheel speed signals.
-![](https://github.com/UditBhaskar19/EGO_MOTION_ESTIMATION/blob/main/1_egomotion_wheel_speed/readme_artifacts/5_velocity_comparison.PNG)
-![](https://github.com/UditBhaskar19/EGO_MOTION_ESTIMATION/blob/main/1_egomotion_wheel_speed/readme_artifacts/6_velocity_comparison.PNG)
+![](./readme_artifacts/5_velocity_comparison.PNG)
+![](./readme_artifacts/6_velocity_comparison.PNG)
 <br>
 
 [Back to TOC](#t0)
