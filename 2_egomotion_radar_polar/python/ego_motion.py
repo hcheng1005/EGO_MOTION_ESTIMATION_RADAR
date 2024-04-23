@@ -65,7 +65,9 @@ def estimate_ego_vx_vy_yawrate(vx, vy, tx, ty):
     vy_ego = 0.0
     return vx_ego, vy_ego, yawrate_ego
 
-
+'''
+根据车辆运行状态以及传感器安装信息，计算当前工况下传感器的速度信息
+'''
 def generate_meas_sensor_frame(vx_ego, vy_ego, yawrate_ego, tx, ty, theta):
     """ compute velocity vector in the sensor frame at the sensor location given the ego motion
     Input: vx_ego, vy_ego, yawrate_ego - vehicle ego motion
@@ -87,7 +89,11 @@ def predict_range_rate_at_meas_locations(vx_ego, vy_ego, yawrate_ego, meas_theta
          : theta - radar mount azimuth angle
     Output: vr_pred - computed range rates at the measurement locations 
     """
+    
+    # 根据车辆运行状态以及传感器安装信息，计算当前工况下传感器的速度信息
     vx_sensor, vy_sensor = generate_meas_sensor_frame(vx_ego, vy_ego, yawrate_ego, tx, ty, theta)
+    
+    #　根据点云方位角，计算理论径向速度vr_pred（仅需要点云的方位角信息即可！与点云的距离r无关！）
     vr_pred = -( vx_sensor * np.cos(meas_theta) + vy_sensor * np.sin(meas_theta) )
     return vr_pred
 
@@ -179,7 +185,9 @@ def ransac(z):
 
     return inliers_flag, is_valid, in_ratio
 
-
+'''
+点云动静识别模块
+'''
 def gate_stationary_meas(ego_motion_prior, z, tx, ty, theta):
     """ given a prior estimate of the vehicle ego motion which can be either from vehicle odometry 
         or the predicted motion estimate from the previous state ego motion select measurements which are likeliy to be stationary
@@ -194,10 +202,14 @@ def gate_stationary_meas(ego_motion_prior, z, tx, ty, theta):
     vy_ego = ego_motion_prior[1]
     yawrate_ego = ego_motion_prior[2]
 
+    # 获取雷达点云的角度和径向速度
     z_azimuth = z[:, const.rad_meas_attr['azimuth']]
     z_vr = z[:, const.rad_meas_attr['range_rate']]
+    
+    # 根据车辆的运动状态和雷达的安装参数，预测每个测量位置的径向速度
     vr_pred = predict_range_rate_at_meas_locations(vx_ego, vy_ego, yawrate_ego, z_azimuth, tx, ty, theta)
 
+    # 和设定的阈值比较，进行动静点分离
     error = vr_pred - z_vr
     sel_z_flag = ( np.abs(error) <= const.gamma_stationary )
     z = z[sel_z_flag]

@@ -190,6 +190,8 @@ def kalman_filtering_single_sensor(
 
     # perform a preliminary selection of stationary measurements
     ego_motion_prior = np.array([odom_vx, odom_vy, odom_yawrate])
+    
+    #　rad_meas_stationary为粗估的静态点云
     rad_meas_stationary, _ = gate_stationary_meas(ego_motion_prior, rad_meas, tx, ty, theta)
 
     # identify inliers by ransac

@@ -26,6 +26,7 @@ def ego_motion_single_radar_kf(scene, sensor, verbose=True):
     _, data_timestamp_and_odom = parse_csv_file(file_timestamp_and_odom)
 
     # extract radar mount parameters
+    # 读取各雷达传感器的安装参数
     radar_mount_param = select_radar_mount_parameters(sensor)
 
     # estimations
