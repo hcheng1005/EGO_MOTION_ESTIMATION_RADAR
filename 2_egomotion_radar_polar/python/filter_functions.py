@@ -142,6 +142,10 @@ def kalman_filter_step(
         vx2, vy2 = generate_meas_sensor_frame(vx_odom, 0.0, yaw_rate_odom, tx, ty, theta)
         is_gated2 = check_if_gated(x_pred[0], x_pred[1], vx2, vy2, tx, ty, theta, const.gamma_sq_vx_vy)
 
+        
+        # 1. 两者均可不用时，不进行KF更新步骤；
+        # 2. 毫米波数据可用，使用毫米波雷达数据进行update；
+        # 3. 毫米波数据不可用，使用里程计数据进行update；
         condition = ( ( not is_gated1 ) and (not is_gated2 ) )
         if condition:
             x_upd = x_pred
@@ -191,12 +195,17 @@ def kalman_filtering_single_sensor(
     # perform a preliminary selection of stationary measurements
     ego_motion_prior = np.array([odom_vx, odom_vy, odom_yawrate])
     
-    #　rad_meas_stationary为粗估的静态点云
-    rad_meas_stationary, _ = gate_stationary_meas(ego_motion_prior, rad_meas, tx, ty, theta)
+    #　rad_meas_stationary为粗估的静态点云，实际工程中，可能会缺失里程计信息
+    # rad_meas_stationary, _ = gate_stationary_meas(ego_motion_prior, rad_meas, tx, ty, theta)
+    
+    rad_meas_stationary = rad_meas
 
     # identify inliers by ransac
+    # is_valid用于标识本次毫米波数据是否可用，在后续的kalman_filter_step中会对其进行判断
     inliers_flag, is_valid, _ = ransac(rad_meas_stationary)
     rad_meas_stationary = rad_meas_stationary[inliers_flag]
+    
+    # print(f"原始点个数: {len(inliers_flag)}, 静止点个数：{len(rad_meas_stationary)}")
 
     # compute dt
     dt = timestamp_rad - timestamp_prev
