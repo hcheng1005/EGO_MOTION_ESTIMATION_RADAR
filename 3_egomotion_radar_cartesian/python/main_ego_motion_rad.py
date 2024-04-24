@@ -63,10 +63,10 @@ def compute_ego_motion(rad_data_meta_info, timestamps_meta_info, calib_meta_info
         if const.mode == '2dof': ego_motion_curr = np.array([ego_motion_curr[0], 0.0, ego_motion_curr[1]])
         ego_motion_pred = ego_motion_curr
 
-        # output results
-        print('time: ', f'{time:.3f}' , 
-              '    vx: ', f'{ego_motion_curr[0]:.3f}', 
-              '    yaw_rate: ', f'{const.rad2deg*ego_motion_curr[2]:.3f}')
+        # # output results
+        # print('time: ', f'{time:.3f}' , 
+        #       '    vx: ', f'{ego_motion_curr[0]:.3f}', 
+        #       '    yaw_rate: ', f'{const.rad2deg*ego_motion_curr[2]:.3f}')
 
         # for plotting
         ego_motion_consolidate.append(ego_motion_curr)

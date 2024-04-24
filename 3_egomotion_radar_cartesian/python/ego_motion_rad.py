@@ -104,7 +104,8 @@ def compute_errors(z, z_pred):
     mu = np.sum(err, axis=0) / err.shape[0]
     delta = np.expand_dims(err - mu, axis=-1)
     delta = np.sum(delta @ delta.transpose(0,2,1), axis=0)
-    sigma = delta / (err.shape[0] - 1)
+    regularization_term = 1e-6  # 正则化参数，可以根据需要调整 （避免sigma出现奇异矩阵）
+    sigma = delta / (err.shape[0] - 1) + np.eye(2) * regularization_term
     return err, mu, sigma
 
 
